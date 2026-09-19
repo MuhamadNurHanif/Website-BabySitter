@@ -40,10 +40,6 @@ const faqs = [
     q: "Bagaimana kalau perlu membatalkan jadwal?",
     a: "Bebas reschedule dengan konfirmasi minimal 12 jam sebelumnya. Pembatalan mendadak dikenakan 50% tarif.",
   },
-  {
-    q: "Apakah Novin bersedia di luar Jakarta?",
-    a: "Area utama Jakarta & Tangerang. Luar area dikenakan biaya transportasi tambahan.",
-  },
 ];
 
 export default function ServicesPage() {

@@ -112,7 +112,7 @@ export default function ContactPage() {
           <div className="overflow-hidden rounded-2xl border border-border">
             <iframe
               title="Peta area layanan Bali"
-              src="https://maps.google.com/maps?q=Jakarta%20Selatan&t=&z=11&ie=UTF8&iwloc=&output=embed"
+              src="https://www.google.com/maps?q=-8.673701286315918,115.19717407226562&z=17&hl=id"
               className="h-80 w-full"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
