@@ -111,7 +111,7 @@ export default function ContactPage() {
           <h2 className="mb-4 text-xl font-bold">Area Layanan</h2>
           <div className="overflow-hidden rounded-2xl border border-border">
             <iframe
-              title="Peta area layanan Jakarta"
+              title="Peta area layanan Bali"
               src="https://maps.google.com/maps?q=Jakarta%20Selatan&t=&z=11&ie=UTF8&iwloc=&output=embed"
               className="h-80 w-full"
               loading="lazy"

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s | Novin Nanny",
   },
   description:
-    "Layanan babysitter profesional di Jakarta: full-time, part-time, event care, dan spesialis newborn. Aman, hangat, dan terpercaya.",
+    "Layanan babysitter profesional di Bali: full-time, part-time, event care, dan spesialis newborn. Aman, hangat, dan terpercaya.",
 };
 
 export default function RootLayout({

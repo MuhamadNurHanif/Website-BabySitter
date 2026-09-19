@@ -27,7 +27,7 @@ export default function HomePage() {
             <FadeIn>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
                 <Sparkles className="size-4" />
-                {site.tagline} · Jakarta
+                {site.tagline} · Bali
               </span>
             </FadeIn>
             <FadeIn delay={0.1}>
@@ -186,7 +186,7 @@ export default function HomePage() {
                 Novin adalah babysitter profesional yang percaya setiap anak
                 unik dan layak mendapatkan perawatan terbaik. Dengan pendekatan
                 yang sabar dan penuh kasih sayang, Novin menjadi partner
-                terpercaya bagi puluhan keluarga di Jakarta.
+                terpercaya bagi puluhan keluarga di Bali.
               </p>
             </FadeIn>
             <FadeIn delay={0.2}>

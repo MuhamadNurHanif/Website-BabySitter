@@ -42,7 +42,7 @@ const timeline = [
   {
     year: "2025",
     title: "50+ Keluarga Bahagia",
-    text: "Dipercaya lebih dari 50 keluarga di Jakarta untuk layanan full-time, part-time, dan event care.",
+    text: "Dipercaya lebih dari 50 keluarga di Bali untuk layanan full-time, part-time, dan event care.",
   },
 ];
 
@@ -121,7 +121,7 @@ export default function AboutPage() {
               <ul className="mt-6 space-y-3">
                 {[
                   "Pengalaman 5+ tahun mengasuh bayi hingga anak usia sekolah",
-                  "Dipercaya 50+ keluarga di Jakarta & sekitarnya",
+                  "Dipercaya 50+ keluarga di Bali & sekitarnya",
                   "Ramah, sabar, dan komunikatif",
                 ].map((point) => (
                   <li key={point} className="flex items-center gap-3">
