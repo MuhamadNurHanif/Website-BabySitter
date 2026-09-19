@@ -1,26 +1,81 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fff9fb;
+  --foreground: #2c3e50;
+  --card: #ffffff;
+  --card-foreground: #2c3e50;
+  --popover: #ffffff;
+  --popover-foreground: #2c3e50;
+  --primary: #ff6b9d;
+  --primary-foreground: #ffffff;
+  --secondary: #4ecdc4;
+  --secondary-foreground: #1d3d47;
+  --muted: #f4ecf0;
+  --muted-foreground: #64748b;
+  --accent: #ffd93d;
+  --accent-foreground: #2c3e50;
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+  --success: #2ecc71;
+  --success-foreground: #ffffff;
+  --border: #f0dbe4;
+  --input: #ead5de;
+  --ring: #ff6b9d;
+  --radius: 0.75rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+@utility gradient-brand {
+  background-image: linear-gradient(135deg, #ff6b9d, #ffd93d);
+}
+
+@utility text-gradient-brand {
+  background-image: linear-gradient(135deg, #ff6b9d, #ffd93d);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
