@@ -3,33 +3,16 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useState } from "react";
-import { formatIDR, services } from "@/lib/services";
+import { useLang } from "@/lib/i18n";
+import { dictionaries } from "@/lib/dict";
+import { formatIDR, services, tr } from "@/lib/services";
 import { cn } from "cn";
 
 type Mode = "hourly" | "monthly";
 
-function AnimatedPrice({ value, mode }: { value: number | null; mode: Mode }) {
-  return (
-    <AnimatePresence mode="wait">
-      <motion.span
-        key={mode + (value ?? "none")}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
-        transition={{ duration: 0.2 }}
-        className="font-semibold"
-      >
-        {value === null
-          ? "—"
-          : mode === "hourly"
-            ? formatIDR(value * 1000) + "/jam"
-            : formatIDR(value) + "/bln"}
-      </motion.span>
-    </AnimatePresence>
-  );
-}
-
 export function PricingTable() {
+  const { lang } = useLang();
+  const t = dictionaries[lang].services;
   const [mode, setMode] = useState<Mode>("hourly");
 
   return (
@@ -52,8 +35,8 @@ export function PricingTable() {
                   transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
                 />
               )}
-              <span className="relative capitalize">
-                {m === "hourly" ? "Per Jam" : "Per Bulan"}
+              <span className="relative">
+                {m === "hourly" ? t.hourly : t.monthly}
               </span>
             </button>
           ))}
@@ -64,11 +47,13 @@ export function PricingTable() {
         <table className="w-full min-w-[560px] text-sm">
           <thead>
             <tr className="border-b border-border text-left">
-              <th className="px-6 py-4 font-semibold">Layanan</th>
+              <th className="px-6 py-4 font-semibold">{t.tableService}</th>
               <th className="px-6 py-4 font-semibold">
-                {mode === "hourly" ? "Harga per Jam" : "Harga per Bulan"}
+                {mode === "hourly" ? t.tableHourly : t.tableMonthly}
               </th>
-              <th className="px-6 py-4 font-semibold">Catatan</th>
+              <th className="px-6 py-4 font-semibold">
+                {lang === "id" ? "Catatan" : "Notes"}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -77,21 +62,33 @@ export function PricingTable() {
                 key={s.slug}
                 className="border-b border-border/60 last:border-0 transition-colors hover:bg-muted/50"
               >
-                <td className="px-6 py-4">{s.name}</td>
+                <td className="px-6 py-4">{tr(s.name, lang)}</td>
                 <td className="px-6 py-4">
-                  <AnimatedPrice
-                    value={mode === "hourly" ? s.hourly : s.monthly}
-                    mode={mode}
-                  />
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={mode}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className="font-semibold"
+                    >
+                      {mode === "hourly"
+                        ? formatIDR(s.hourly * 1000) + (lang === "id" ? "/jam" : "/hr")
+                        : s.monthly === null
+                          ? "—"
+                          : formatIDR(s.monthly) + (lang === "id" ? "/bln" : "/mo")}
+                    </motion.span>
+                  </AnimatePresence>
                 </td>
                 <td className="px-6 py-4 text-muted-foreground">
                   {mode === "monthly" && s.monthly === null
-                    ? "Tersedia per jam saja"
+                    ? t.notes.hourlyOnly
                     : s.slug === "event-care"
-                      ? "Min. 3 jam"
+                      ? t.notes.event
                       : s.slug === "part-time"
-                        ? "Min. 4 jam/kunjungan"
-                        : "Bisa nego untuk jangka panjang"}
+                        ? t.notes.partTime
+                        : t.notes.longTerm}
                 </td>
               </tr>
             ))}
@@ -100,7 +97,7 @@ export function PricingTable() {
       </div>
       <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-sm text-muted-foreground">
         <Check className="size-4 text-success" />
-        Konsultasi & trial 1 jam gratis untuk keluarga baru.
+        {t.trialNote}
       </p>
     </div>
   );

@@ -3,16 +3,22 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useLang } from "@/lib/i18n";
+import { dictionaries } from "@/lib/dict";
 import { testimonials, type Testimonial } from "@/lib/testimonials";
+import { tr } from "@/lib/services";
 import { cn } from "cn";
 
 const AUTOPLAY_MS = 5000;
 
-function Slide({ t }: { t: Testimonial }) {
+function Slide({ t, lang }: { t: Testimonial; lang: "id" | "en" }) {
   return (
     <div className="flex h-full flex-col items-center gap-4 px-2 text-center sm:px-12">
       <Quote className="size-8 text-primary/40" />
-      <div className="flex gap-1" aria-label={`Rating ${t.rating} dari 5`}>
+      <div
+        className="flex gap-1"
+        aria-label={dictionaries[lang].testimonials.ratingAria}
+      >
         {Array.from({ length: t.rating }).map((_, i) => (
           <motion.span
             key={i}
@@ -25,7 +31,7 @@ function Slide({ t }: { t: Testimonial }) {
         ))}
       </div>
       <blockquote className="max-w-2xl text-lg text-foreground/90">
-        “{t.text}”
+        “{tr(t.text, lang)}”
       </blockquote>
       <div className="mt-2 flex items-center gap-3">
         <span
@@ -37,7 +43,7 @@ function Slide({ t }: { t: Testimonial }) {
         <div className="text-left">
           <p className="font-semibold">{t.name}</p>
           <p className="text-xs text-muted-foreground">
-            {t.service} · {t.date}
+            {tr(t.service, lang)} · {tr(t.date, lang)}
           </p>
         </div>
       </div>
@@ -46,6 +52,7 @@ function Slide({ t }: { t: Testimonial }) {
 }
 
 export function TestimonialSlider() {
+  const { lang } = useLang();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -81,27 +88,27 @@ export function TestimonialSlider() {
       <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 shadow-sm sm:p-10">
         <AnimatePresence mode="wait">
           <motion.div
-            key={testimonials[index].id}
+            key={`${lang}-${testimonials[index].id}`}
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.3 }}
           >
-            <Slide t={testimonials[index]} />
+            <Slide t={testimonials[index]} lang={lang} />
           </motion.div>
         </AnimatePresence>
       </div>
 
       <button
         onClick={prev}
-        aria-label="Testimoni sebelumnya"
+        aria-label="Previous"
         className="absolute left-0 top-1/2 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card shadow-md transition-transform hover:scale-105 active:scale-95"
       >
         <ChevronLeft className="size-5" />
       </button>
       <button
         onClick={next}
-        aria-label="Testimoni berikutnya"
+        aria-label="Next"
         className="absolute right-0 top-1/2 flex size-10 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border border-border bg-card shadow-md transition-transform hover:scale-105 active:scale-95"
       >
         <ChevronRight className="size-5" />
@@ -112,7 +119,7 @@ export function TestimonialSlider() {
           <button
             key={t.id}
             onClick={() => setIndex(i)}
-            aria-label={`Ke testimoni ${i + 1}`}
+            aria-label={`${i + 1}`}
             className={cn(
               "h-2.5 rounded-full transition-all duration-300",
               i === index ? "w-7 gradient-brand" : "w-2.5 bg-border"

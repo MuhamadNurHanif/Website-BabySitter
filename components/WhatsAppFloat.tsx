@@ -1,12 +1,19 @@
+"use client";
+
+import { useLang } from "@/lib/i18n";
+import { dictionaries } from "@/lib/dict";
 import { site } from "@/lib/site";
 
 export function WhatsAppFloat() {
+  const { lang } = useLang();
+  const label = dictionaries[lang].waFloat;
+
   return (
     <a
       href={site.whatsapp}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat WhatsApp dengan Novin"
+      aria-label={label}
       title="Chat with us"
       className="group fixed bottom-5 right-5 z-40 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl transition-transform duration-200 hover:scale-110 active:scale-95"
       style={{ marginBottom: "env(safe-area-inset-bottom, 0px)" }}

@@ -6,15 +6,44 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, Baby } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { navLinks, site } from "@/lib/site";
+import { useLang, type Lang } from "@/lib/i18n";
+import { dictionaries } from "@/lib/dict";
+import { site } from "@/lib/site";
 import { cn } from "cn";
+
+export function LangSwitcher() {
+  const { lang, setLang } = useLang();
+  return (
+    <div
+      className="flex items-center rounded-full border border-border bg-card p-0.5"
+      role="group"
+      aria-label="Language"
+    >
+      {(["id", "en"] as Lang[]).map((l) => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          aria-pressed={lang === l}
+          aria-label={l === "id" ? "Bahasa Indonesia" : "English"}
+          className={cn(
+            "min-h-7 rounded-full px-2.5 text-xs font-bold uppercase transition-all duration-200",
+            lang === l
+              ? "gradient-brand text-white shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {l}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-
-  // tutup drawer saat pindah halaman
-  useEffect(() => setOpen(false), [pathname]);
+  const { lang } = useLang();
+  const t = dictionaries[lang].nav;
 
   // lock scroll + Escape untuk tutup
   useEffect(() => {
@@ -43,7 +72,7 @@ export function Navbar() {
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
+          {t.items.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
@@ -64,16 +93,19 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="hidden shrink-0 md:block">
-          <Button asChild className="h-10 rounded-xl px-5">
-            <Link href="/contact">Book Now</Link>
-          </Button>
+        <div className="flex shrink-0 items-center gap-2">
+          <LangSwitcher />
+          <div className="hidden md:block">
+            <Button asChild className="h-10 rounded-xl px-5">
+              <Link href="/contact">{t.book}</Link>
+            </Button>
+          </div>
         </div>
 
         <button
           className="flex size-11 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted md:hidden"
           onClick={() => setOpen(!open)}
-          aria-label={open ? "Tutup menu" : "Buka menu"}
+          aria-label={open ? t.closeMenu : t.openMenu}
           aria-expanded={open}
         >
           {open ? <X className="size-6" /> : <Menu className="size-6" />}
@@ -91,23 +123,24 @@ export function Navbar() {
               onClick={() => setOpen(false)}
             />
             <motion.nav
-              className="fixed inset-y-0 left-0 top-16 z-40 flex w-72 max-w-[85vw] flex-col border-r border-border bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-xl md:hidden"
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
+              className="fixed inset-x-0 top-16 z-40 flex max-h-[calc(100vh-4rem)] flex-col border-b border-border bg-background p-4 shadow-xl md:hidden"
+              initial={{ y: "-100%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "-100%", opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
               aria-label="Menu navigasi"
             >
-              <ul className="flex flex-1 flex-col gap-1 overflow-y-auto">
-                {navLinks.map((link, i) => (
+              <ul className="flex flex-col gap-1 overflow-y-auto">
+                {t.items.map((link, i) => (
                   <motion.li
                     key={link.href}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 * i }}
                   >
                     <Link
                       href={link.href}
+                      onClick={() => setOpen(false)}
                       className={cn(
                         "flex min-h-11 items-center rounded-lg px-3 text-base font-medium transition-colors",
                         pathname === link.href
@@ -120,11 +153,13 @@ export function Navbar() {
                   </motion.li>
                 ))}
               </ul>
-              <Button asChild className="mt-4 h-12 w-full rounded-xl text-base">
-                <Link href={site.whatsapp} target="_blank">
-                  Chat WhatsApp
-                </Link>
-              </Button>
+              <div className="mt-4 shrink-0">
+                <Button asChild className="h-12 w-full rounded-xl text-base">
+                  <Link href={site.whatsapp} target="_blank">
+                    {t.chatWa}
+                  </Link>
+                </Button>
+              </div>
             </motion.nav>
           </>
         )}

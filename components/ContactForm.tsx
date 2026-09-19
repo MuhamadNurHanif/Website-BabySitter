@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Loader2, Send } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -22,14 +22,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { contactSchema, type ContactFormData } from "@/lib/contact-schema";
-import { services } from "@/lib/services";
+import { useLang } from "@/lib/i18n";
+import { dictionaries } from "@/lib/dict";
+import {
+  makeContactSchema,
+  type ContactFormData,
+} from "@/lib/contact-schema";
+import { services, tr } from "@/lib/services";
 
 export function ContactForm() {
+  const { lang } = useLang();
+  const t = dictionaries[lang].contact;
   const [submitted, setSubmitted] = useState(false);
 
+  const schema = useMemo(
+    () => makeContactSchema(dictionaries[lang].errors),
+    [lang]
+  );
+
   const form = useForm<ContactFormData>({
-    resolver: zodResolver(contactSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       email: "",
@@ -48,14 +60,14 @@ export function ContactForm() {
     const data = await res.json().catch(() => null);
 
     if (res.ok) {
-      toast.success("Pesan terkirim!", {
-        description: "Novin akan membalas secepatnya. Terima kasih! 💕",
+      toast.success(t.successToastTitle, {
+        description: t.successToastDesc,
       });
       form.reset();
       setSubmitted(true);
     } else {
-      toast.error("Gagal mengirim pesan", {
-        description: data?.error ?? "Coba lagi atau hubungi via WhatsApp.",
+      toast.error(t.errorToastTitle, {
+        description: data?.error ?? t.errorToastDesc,
       });
     }
   };
@@ -68,11 +80,12 @@ export function ContactForm() {
         <div className="grid gap-5 sm:grid-cols-2">
           <Field data-invalid={!!form.formState.errors.name}>
             <FieldLabel htmlFor="name">
-              Nama <span className="text-destructive">*</span>
+              {t.nameLabel}{" "}
+              <span className="text-destructive">{t.required}</span>
             </FieldLabel>
             <Input
               id="name"
-              placeholder="Nama Anda"
+              placeholder={t.namePh}
               className="h-11 rounded-xl"
               aria-invalid={!!form.formState.errors.name}
               {...form.register("name")}
@@ -82,12 +95,13 @@ export function ContactForm() {
 
           <Field data-invalid={!!form.formState.errors.email}>
             <FieldLabel htmlFor="email">
-              Email <span className="text-destructive">*</span>
+              {t.emailLabel}{" "}
+              <span className="text-destructive">{t.required}</span>
             </FieldLabel>
             <Input
               id="email"
               type="email"
-              placeholder="nama@email.com"
+              placeholder={t.emailPh}
               className="h-11 rounded-xl"
               aria-invalid={!!form.formState.errors.email}
               {...form.register("email")}
@@ -99,12 +113,13 @@ export function ContactForm() {
         <div className="grid gap-5 sm:grid-cols-2">
           <Field data-invalid={!!form.formState.errors.phone}>
             <FieldLabel htmlFor="phone">
-              Telepon/WhatsApp <span className="text-destructive">*</span>
+              {t.phoneLabel}{" "}
+              <span className="text-destructive">{t.required}</span>
             </FieldLabel>
             <Input
               id="phone"
               type="tel"
-              placeholder="+62 812-xxxx-xxxx"
+              placeholder={t.phonePh}
               className="h-11 rounded-xl"
               aria-invalid={!!form.formState.errors.phone}
               {...form.register("phone")}
@@ -114,22 +129,25 @@ export function ContactForm() {
 
           <Field data-invalid={!!form.formState.errors.service}>
             <FieldLabel>
-              Layanan yang Diminati <span className="text-destructive">*</span>
+              {t.serviceLabel}{" "}
+              <span className="text-destructive">{t.required}</span>
             </FieldLabel>
             <Select
               value={form.watch("service")}
-              onValueChange={(v) => form.setValue("service", v, { shouldValidate: true })}
+              onValueChange={(v) =>
+                form.setValue("service", v, { shouldValidate: true })
+              }
             >
               <SelectTrigger className="h-11 w-full rounded-xl aria-invalid:border-destructive">
-                <SelectValue placeholder="Pilih layanan" />
+                <SelectValue placeholder={t.servicePh} />
               </SelectTrigger>
               <SelectContent>
                 {services.map((s) => (
-                  <SelectItem key={s.slug} value={s.name}>
-                    {s.name}
+                  <SelectItem key={s.slug} value={s.name.en}>
+                    {tr(s.name, lang)}
                   </SelectItem>
                 ))}
-                <SelectItem value="Lainnya">Lainnya / Belum Yakin</SelectItem>
+                <SelectItem value="Other">{t.serviceOther}</SelectItem>
               </SelectContent>
             </Select>
             <FieldError errors={[form.formState.errors.service]} />
@@ -138,11 +156,12 @@ export function ContactForm() {
 
         <Field data-invalid={!!form.formState.errors.message}>
           <FieldLabel htmlFor="message">
-            Pesan <span className="text-destructive">*</span>
+            {t.messageLabel}{" "}
+            <span className="text-destructive">{t.required}</span>
           </FieldLabel>
           <Textarea
             id="message"
-            placeholder="Ceritakan kebutuhan keluarga Anda: usia anak, jadwal, lokasi..."
+            placeholder={t.messagePh}
             className="min-h-32 rounded-xl"
             maxLength={500}
             aria-invalid={!!form.formState.errors.message}
@@ -170,12 +189,12 @@ export function ContactForm() {
           {form.formState.isSubmitting ? (
             <>
               <Loader2 className="size-5 animate-spin" />
-              Mengirim...
+              {t.sending}
             </>
           ) : (
             <>
               <Send className="size-5" />
-              Kirim Pesan
+              {t.submit}
             </>
           )}
         </Button>
@@ -187,7 +206,7 @@ export function ContactForm() {
             className="rounded-xl bg-success/10 px-4 py-3 text-center text-sm font-medium text-success"
             role="status"
           >
-            ✓ Pesan Anda sudah terkirim. Form siap digunakan lagi.
+            {t.successNote}
           </motion.p>
         )}
       </FieldGroup>
