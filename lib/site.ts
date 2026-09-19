@@ -1,8 +1,8 @@
 export const site = {
   name: "Novin Nanny",
   tagline: "Trusted Childcare",
-  phone: "+6281234567890",
-  phoneDisplay: "+62 812-3456-7890",
+  phone: "+6281246918268",
+  phoneDisplay: "+62 812-4691-8268",
   email: "hello@novinnanny.id",
   location: "Bali, Indonesia",
   hours: "Senin – Sabtu, 07.00 – 20.00 WIB",

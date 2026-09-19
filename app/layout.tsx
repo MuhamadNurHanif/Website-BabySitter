@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -29,6 +30,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
         <Footer />
+        <WhatsAppFloat />
         <Toaster position="top-center" richColors />
       </body>
     </html>
